@@ -8,13 +8,13 @@ public class MarsRover {
     private static final int Y = 1;
     private static final int X = 0;
 
-    public String d;
+    private String direction;
     // position which contains X and Y
-    private int[] p;
+    private int[] position;
 
     public MarsRover(int startingX, int startingY, String direction) {
-        this.p = new int[]{startingX, startingY};
-        this.d = direction;
+        this.position = new int[]{startingX, startingY};
+        this.direction = direction;
     }
 
     public String run(String input) {
@@ -22,52 +22,60 @@ public class MarsRover {
 
         validateCommands(input, commandArray);
 
-        String[] commands = commandArray;
 
-        for (String command : commands) {
-            if (command.equals("M")) {
-                move();
-            } else if (isRightTurnCommand(command)) {
-                turnRight();
-            } else if (command.equals("L")) {
-                turnLeft();
-            } else if (command.equals("B")) {
-                turnRight();
-                turnRight();
-                move();
-                turnRight();
-                turnRight();
+        for (String command : commandArray) {
+            switch (command) {
+                case "M":
+                    move();
+                    break;
+                case "R":
+                    turnRight();
+                    break;
+                case "L":
+                    turnLeft();
+                    break;
+                default:
+                    turnRight();
+                    turnRight();
+                    move();
+                    turnRight();
+                    turnRight();
+                    break;
             }
         }
 
         return asString();
     }
 
-    private boolean isRightTurnCommand(String command) {
-        return command.equals("R");
-    }
 
     private void move() {
-        if (d.equals("N")) {
-            p[Y] += +1;
-        } else if (d.equals("S")) {
-            p[Y] += -1;
-        } else if (d.equals("E")) {
-            p[X] += +1;
-        } else if (d.equals("W")) {
-            p[X] += -1;
+        switch (direction) {
+            case "N":
+                position[Y] += +1;
+                break;
+            case "S":
+                position[Y] += -1;
+                break;
+            case "E":
+                position[X] += +1;
+                break;
+            default:
+                position[X] += -1;
+                break;
         }
     }
 
     private void turnLeft() {
-        d = DIRECTIONS.get((DIRECTIONS.indexOf(d) + 3) % DIRECTIONS.size());
+        int left = (DIRECTIONS.indexOf(direction) + 3) % DIRECTIONS.size();
+        direction = DIRECTIONS.get(left);
     }
 
     private void turnRight() {
-        d = DIRECTIONS.get((DIRECTIONS.indexOf(d) + 1) % DIRECTIONS.size());
+        int right = (DIRECTIONS.indexOf(direction) + 1) % DIRECTIONS.size();
+        direction = DIRECTIONS.get(right);
     }
 
-    public static void validateCommands(String input, String[] commandArray) {
+    private static void validateCommands(String input, String[] commandArray) {
         for (String command : commandArray) {
             if (!VALID_COMMANDS.contains(command)) {
                 throw new IllegalArgumentException("Invalid command sequence: " + input);
@@ -76,6 +84,6 @@ public class MarsRover {
     }
 
     private String asString() {
-        return p[X] + " " + p[Y] + " " + d;
+        return position[X] + " " + position[Y] + " " + direction;
     }
 }
