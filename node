@@ -1,0 +1,4 @@
+Tools: Trello,mindMap
+Test: mock(基于行为), stub(基于数据)
+
+Refactoring:https://refactoring.guru/
